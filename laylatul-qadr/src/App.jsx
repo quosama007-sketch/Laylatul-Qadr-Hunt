@@ -237,12 +237,12 @@ export default function App(){
         {/* Stats row */}
         <div style={{
           display:"flex",justifyContent:"center",gap:32,marginBottom:32,
-          fontSize:"0.6rem",letterSpacing:"0.18em",textTransform:"uppercase",
-          color:C.textFaint,fontFamily:"Georgia,serif",
+          fontSize:"0.62rem",letterSpacing:"0.18em",textTransform:"uppercase",
+          color:"rgba(236,230,218,0.55)",fontFamily:"Georgia,serif",
         }}>
           {["6 Categories","36 Acts","3,660 pts"].map(s=>(
-            <span key={s} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-              <span style={{color:C.goldDim,fontSize:"0.85rem",fontFamily:"Georgia,serif",letterSpacing:"0.02em"}}>{s.split(" ")[0]}</span>
+            <span key={s} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:5}}>
+              <span style={{color:C.gold,fontSize:"1.1rem",fontFamily:"Georgia,serif",letterSpacing:"0.02em",fontWeight:500}}>{s.split(" ")[0]}</span>
               <span>{s.split(" ").slice(1).join(" ")}</span>
             </span>
           ))}
@@ -256,21 +256,21 @@ export default function App(){
           onKeyDown={e=>e.key==="Enter"&&inp.trim()&&(setName(inp.trim()),setStart(true))}
           style={{
             display:"block",width:"100%",
-            background:"transparent",
-            border:`1px solid ${C.borderGold}`,
+            background:"rgba(255,255,255,0.04)",
+            border:"1px solid rgba(196,155,60,0.5)",
             borderRadius:6,
-            color:C.text,padding:"0.85rem 1.1rem",
-            fontSize:"0.9rem",outline:"none",
+            color:"rgba(236,230,218,0.95)",padding:"0.85rem 1.1rem",
+            fontSize:"0.95rem",outline:"none",
             textAlign:"center",fontFamily:"Georgia,serif",
             boxSizing:"border-box",marginBottom:12,
-            letterSpacing:"0.04em",
-            transition:"border-color 0.2s",
+            letterSpacing:"0.06em",
+            transition:"border-color 0.2s, background 0.2s",
           }}
-          onFocus={e=>e.target.style.borderColor="rgba(196,155,60,0.55)"}
-          onBlur={e=>e.target.style.borderColor="rgba(196,155,60,0.22)"}
+          onFocus={e=>{e.target.style.borderColor="rgba(196,155,60,0.85)";e.target.style.background="rgba(255,255,255,0.07)";}}
+          onBlur={e=>{e.target.style.borderColor="rgba(196,155,60,0.5)";e.target.style.background="rgba(255,255,255,0.04)";}}
         />
         <button className="cta"
-          style={{opacity:inp.trim()?1:0.3}}
+          style={{opacity:inp.trim()?1:0.45,borderColor:"rgba(196,155,60,0.7)",color:C.gold,fontSize:"0.85rem",letterSpacing:"0.25em"}}
           onClick={()=>inp.trim()&&(setName(inp.trim()),setStart(true))}>
           Begin
         </button>
