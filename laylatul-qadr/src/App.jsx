@@ -1,40 +1,39 @@
 import { useState, useMemo, useEffect } from "react";
 
 // ─── PALETTE ──────────────────────────────────────────────────────────────────
-// Deep ink navy + warm parchment + restrained gold — no neons, no bright primaries
 const C = {
-  bg:        "#0b0d13",
-  surface:   "#11141f",
-  surfaceHi: "#171b2a",
-  border:    "rgba(255,255,255,0.07)",
-  borderGold:"rgba(196,155,60,0.22)",
-  gold:      "#c49b3c",
-  goldDim:   "rgba(196,155,60,0.45)",
-  goldFaint: "rgba(196,155,60,0.12)",
-  text:      "rgba(236,230,218,0.88)",
-  textDim:   "rgba(236,230,218,0.38)",
-  textFaint: "rgba(236,230,218,0.18)",
+  bg:        "#0e1018",
+  surface:   "#161a28",
+  surfaceHi: "#1e2338",
+  border:    "rgba(255,255,255,0.13)",
+  borderGold:"rgba(212,175,80,0.45)",
+  gold:      "#d4af50",
+  goldDim:   "rgba(212,175,80,0.75)",
+  goldFaint: "rgba(212,175,80,0.15)",
+  text:      "rgba(240,235,225,0.96)",
+  textDim:   "rgba(240,235,225,0.65)",
+  textFaint: "rgba(240,235,225,0.38)",
   ink:       "#060810",
 };
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const TIERS = ["silver","gold","platinum","diamond","emerald","pearl"];
 const TIER = {
-  silver:   { label:"Silver",   color:"#8aa4be", pts:10  },
-  gold:     { label:"Gold",     color:"#c49b3c", pts:25  },
-  platinum: { label:"Platinum", color:"#9e96cc", pts:50  },
-  diamond:  { label:"Diamond",  color:"#4ab0cc", pts:100 },
-  emerald:  { label:"Emerald",  color:"#3aa870", pts:175 },
-  pearl:    { label:"Pearl",    color:"#b83898", pts:250 },
+  silver:   { label:"Silver",   color:"#a8c4dc", pts:10  },
+  gold:     { label:"Gold",     color:"#d4af50", pts:25  },
+  platinum: { label:"Platinum", color:"#b8b0e8", pts:50  },
+  diamond:  { label:"Diamond",  color:"#50c8e8", pts:100 },
+  emerald:  { label:"Emerald",  color:"#40c880", pts:175 },
+  pearl:    { label:"Pearl",    color:"#e050b0", pts:250 },
 };
 
 const CATS = [
-  { id:"salah",     ar:"الصَّلَاة",    en:"Salah",     sub:"Night Prayer",    color:"#4a88b0" },
-  { id:"quran",     ar:"الْقُرْآن",    en:"Quran",     sub:"Sacred Recitation",color:"#b89030" },
-  { id:"zikr",      ar:"الذِّكْر",     en:"Dhikr",     sub:"Remembrance",     color:"#7050b8" },
-  { id:"sadaqah",   ar:"الصَّدَقَة",   en:"Sadaqah",   sub:"Charity",         color:"#2a8858" },
-  { id:"community", ar:"الْمُجْتَمَع", en:"Community", sub:"Connection",      color:"#a03050" },
-  { id:"dua",       ar:"الدُّعَاء",    en:"Dua",       sub:"Supplication",    color:"#a07020" },
+  { id:"salah",     ar:"الصَّلَاة",    en:"Salah",     sub:"Night Prayer",     color:"#5aa8d8" },
+  { id:"quran",     ar:"الْقُرْآن",    en:"Quran",     sub:"Sacred Recitation",color:"#d4a840" },
+  { id:"zikr",      ar:"الذِّكْر",     en:"Dhikr",     sub:"Remembrance",      color:"#9070e0" },
+  { id:"sadaqah",   ar:"الصَّدَقَة",   en:"Sadaqah",   sub:"Charity",          color:"#38c870" },
+  { id:"community", ar:"الْمُجْتَمَع", en:"Community", sub:"Connection",       color:"#e04870" },
+  { id:"dua",       ar:"الدُّعَاء",    en:"Dua",       sub:"Supplication",     color:"#d08030" },
 ];
 
 const TASKS = [
@@ -299,16 +298,17 @@ export default function App(){
       {/* ── HEADER ── */}
       <header style={{
         position:"sticky",top:0,zIndex:30,
-        background:"rgba(11,13,19,0.97)",
+        background:"rgba(14,16,24,0.98)",
         backdropFilter:"blur(20px)",
-        borderBottom:`1px solid ${C.border}`,
+        borderBottom:`1px solid rgba(255,255,255,0.12)`,
         padding:"0 1.2rem",
         display:"flex",alignItems:"center",justifyContent:"space-between",
         height:54,
+        boxShadow:"0 4px 24px rgba(0,0,0,0.4)",
       }}>
         {/* Left: title */}
         <div>
-          <span style={{fontSize:"0.72rem",letterSpacing:"0.16em",textTransform:"uppercase",color:C.goldDim,fontFamily:"Georgia,serif"}}>
+          <span style={{fontSize:"0.72rem",letterSpacing:"0.16em",textTransform:"uppercase",color:C.gold,fontFamily:"Georgia,serif"}}>
             Laylatul Qadr
           </span>
           <span style={{fontSize:"0.58rem",color:C.textFaint,marginLeft:8,fontFamily:"Georgia,serif"}}>· {name}</span>
@@ -316,17 +316,17 @@ export default function App(){
 
         {/* Right: score + rank + actions */}
         <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <div style={{textAlign:"right",paddingRight:10,borderRight:`1px solid ${C.border}`}}>
-            <div style={{fontSize:"1.05rem",fontWeight:500,color:C.gold,lineHeight:1,fontFamily:"Georgia,serif"}}>{pts}</div>
+          <div style={{textAlign:"right",paddingRight:10,borderRight:`1px solid rgba(255,255,255,0.12)`}}>
+            <div style={{fontSize:"1.1rem",fontWeight:600,color:C.gold,lineHeight:1,fontFamily:"Georgia,serif"}}>{pts}</div>
             <div style={{fontSize:"0.46rem",color:C.textFaint,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"Georgia,serif"}}>points</div>
           </div>
           <div style={{
             display:"flex",alignItems:"center",gap:6,
-            background:C.surfaceHi,
-            border:`1px solid ${C.border}`,
-            borderRadius:20,padding:"4px 10px",
+            background:"rgba(212,175,80,0.1)",
+            border:`1px solid rgba(212,175,80,0.35)`,
+            borderRadius:20,padding:"4px 12px",
           }}>
-            <span style={{fontSize:"0.62rem",color:C.textDim,fontFamily:"Georgia,serif",letterSpacing:"0.04em"}}>{rank.title}</span>
+            <span style={{fontSize:"0.65rem",color:C.gold,fontFamily:"Georgia,serif",letterSpacing:"0.04em"}}>{rank.title}</span>
           </div>
           <button className="hbtn" onClick={()=>setModal("lb")} title="Leaderboard">
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -520,29 +520,31 @@ export default function App(){
 
           {/* Rank card */}
           <div style={{
-            background:C.surface,border:`1px solid ${C.borderGold}`,
-            borderRadius:10,padding:"20px 20px",marginBottom:12,
+            background:"linear-gradient(135deg,#1e2338 0%,#161a28 100%)",
+            border:`1px solid rgba(212,175,80,0.4)`,
+            borderRadius:12,padding:"22px 22px",marginBottom:14,
             position:"relative",overflow:"hidden",
+            boxShadow:"0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(212,175,80,0.15)",
           }}>
-            <div style={{position:"absolute",right:-30,top:-30,opacity:0.06}}>
+            <div style={{position:"absolute",right:-30,top:-30,opacity:0.1}}>
               <GeomStar size={160} spin={false}/>
             </div>
-            <div style={{fontSize:"0.55rem",letterSpacing:"0.18em",textTransform:"uppercase",color:C.textFaint,fontFamily:"Georgia,serif",marginBottom:8}}>Current Rank</div>
+            <div style={{fontSize:"0.55rem",letterSpacing:"0.18em",textTransform:"uppercase",color:C.goldDim,fontFamily:"Georgia,serif",marginBottom:8}}>Current Rank</div>
             <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between"}}>
               <div>
-                <div style={{fontSize:"1.3rem",color:C.text,fontFamily:"'Palatino Linotype',Georgia,serif",letterSpacing:"0.04em",fontWeight:400}}>{rank.title}</div>
-                <div style={{fontSize:"1rem",color:C.goldDim,direction:"rtl",fontFamily:"serif",marginTop:2}}>{rank.ar}</div>
-                <div style={{fontSize:"0.7rem",color:C.textFaint,fontStyle:"italic",marginTop:4,fontFamily:"Georgia,serif"}}>"{rank.desc}"</div>
+                <div style={{fontSize:"1.4rem",color:C.text,fontFamily:"'Palatino Linotype',Georgia,serif",letterSpacing:"0.04em",fontWeight:400}}>{rank.title}</div>
+                <div style={{fontSize:"1rem",color:C.gold,direction:"rtl",fontFamily:"serif",marginTop:3}}>{rank.ar}</div>
+                <div style={{fontSize:"0.72rem",color:C.textDim,fontStyle:"italic",marginTop:5,fontFamily:"Georgia,serif"}}>"{rank.desc}"</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:"2rem",fontWeight:500,color:C.gold,fontFamily:"Georgia,serif",lineHeight:1}}>{pts}</div>
-                <div style={{fontSize:"0.5rem",color:C.textFaint,letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"Georgia,serif"}}>of 3,660</div>
+                <div style={{fontSize:"2.2rem",fontWeight:600,color:C.gold,fontFamily:"Georgia,serif",lineHeight:1,textShadow:`0 0 20px rgba(212,175,80,0.4)`}}>{pts}</div>
+                <div style={{fontSize:"0.52rem",color:C.textFaint,letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"Georgia,serif",marginTop:2}}>of 3,660</div>
               </div>
             </div>
             {nextRank&&(
-              <div style={{marginTop:14}}>
-                <div style={{height:1,background:C.border,borderRadius:1}}>
-                  <div style={{height:"100%",width:`${Math.min(100,Math.round(((pts-rank.min)/(nextRank.min-rank.min))*100))}%`,background:`linear-gradient(90deg,${C.gold}88,${C.gold})`,transition:"width 0.8s ease"}}/>
+              <div style={{marginTop:16}}>
+                <div style={{height:2,background:"rgba(255,255,255,0.08)",borderRadius:1}}>
+                  <div style={{height:"100%",width:`${Math.min(100,Math.round(((pts-rank.min)/(nextRank.min-rank.min))*100))}%`,background:`linear-gradient(90deg,${C.gold}88,${C.gold})`,transition:"width 0.8s ease",boxShadow:`0 0 8px ${C.gold}88`}}/>
                 </div>
                 <div style={{fontSize:"0.52rem",color:C.textFaint,marginTop:4,fontFamily:"Georgia,serif",letterSpacing:"0.06em"}}>{nextRank.min-pts} pts to {nextRank.title}</div>
               </div>
@@ -717,14 +719,14 @@ const CSS=`
   .cta:hover { background:rgba(196,155,60,0.08); border-color:rgba(196,155,60,0.65); letter-spacing:0.24em; }
 
   .hbtn {
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.07);
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);
     border-radius:6px; padding:6px 8px;
-    cursor:pointer; color:rgba(236,230,218,0.4);
+    cursor:pointer; color:rgba(240,235,225,0.7);
     display:flex; align-items:center; justify-content:center;
     transition:all 0.18s;
   }
-  .hbtn:hover { background:rgba(255,255,255,0.08); color:rgba(236,230,218,0.7); }
+  .hbtn:hover { background:rgba(255,255,255,0.15); color:rgba(240,235,225,0.95); }
 
   .vtab {
     padding:5px 14px; font-size:0.65rem;
@@ -741,7 +743,7 @@ const CSS=`
     background:transparent; border:none; border-bottom:2px solid transparent;
     transition:all 0.22s; white-space:nowrap;
   }
-  .catTab:hover { background:rgba(255,255,255,0.025); }
+  .catTab:hover { background:rgba(255,255,255,0.06); }
 
   .trow {
     display:flex; align-items:center; gap:14px;
@@ -749,34 +751,36 @@ const CSS=`
     cursor:pointer; border-radius:6px;
     transition:background 0.2s;
     margin-bottom:1px;
+    border:1px solid transparent;
   }
-  .trow:hover { background:rgba(255,255,255,0.03); }
-  .trow-done { background:rgba(255,255,255,0.015) !important; }
+  .trow:hover { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.08); }
+  .trow-done { background:rgba(255,255,255,0.04) !important; }
   .trow-flash { animation:rowFlash 0.5s ease; }
-  .trow-locked { cursor:default; opacity:0.55; }
-  .trow-locked:hover { background:transparent !important; transform:none !important; }
+  .trow-locked { cursor:default; opacity:0.4; }
+  .trow-locked:hover { background:transparent !important; border-color:transparent !important; }
 
   .catCard {
-    background:#11141f;
-    border:1px solid rgba(255,255,255,0.07);
+    background:#161a28;
+    border:1px solid rgba(255,255,255,0.12);
     border-top:2px solid var(--cc);
-    border-radius:8px; padding:14px 12px;
+    border-radius:10px; padding:16px 14px;
     cursor:pointer; transition:all 0.22s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
   }
-  .catCard:hover { background:#171b2a; transform:translateY(-1px); box-shadow:0 8px 24px rgba(0,0,0,0.4); }
+  .catCard:hover { background:#1e2338; transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 20px color-mix(in srgb, var(--cc) 15%, transparent); }
 
   .mclose {
     display:block; width:100%;
-    background:transparent; border:1px solid rgba(255,255,255,0.07);
-    border-radius:6px; color:rgba(236,230,218,0.25);
+    background:transparent; border:1px solid rgba(255,255,255,0.12);
+    border-radius:6px; color:rgba(240,235,225,0.45);
     padding:8px; cursor:pointer; font-family:Georgia,serif;
     font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
     transition:all 0.2s;
   }
-  .mclose:hover { background:rgba(255,255,255,0.04); color:rgba(236,230,218,0.45); }
+  .mclose:hover { background:rgba(255,255,255,0.07); color:rgba(240,235,225,0.7); }
 
   ::-webkit-scrollbar { width:2px; height:2px; }
-  ::-webkit-scrollbar-thumb { background:rgba(196,155,60,0.15); border-radius:1px; }
+  ::-webkit-scrollbar-thumb { background:rgba(212,175,80,0.3); border-radius:1px; }
   * { box-sizing:border-box; }
-  input::placeholder { color:rgba(236,230,218,0.22); }
+  input::placeholder { color:rgba(240,235,225,0.35); }
 `;
