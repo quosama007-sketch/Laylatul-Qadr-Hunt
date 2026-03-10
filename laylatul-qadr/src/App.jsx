@@ -76,12 +76,16 @@ const TASKS = [
 ];
 
 const RANKS = [
-  {min:0,   title:"Seeker",                  ar:"السَّالِك",          desc:"The first step is intention"},
-  {min:100, title:"Devoted",                 ar:"الْمُخْلِص",         desc:"The heart that remembers"},
-  {min:300, title:"Worshipper",              ar:"الْعَابِد",           desc:"Rising while the world sleeps"},
-  {min:600, title:"Illuminated",             ar:"النُّورَانِيّ",       desc:"Nūrun ʿalā nūr"},
-  {min:1000,title:"Blessed",                 ar:"الْمُبَارَك",         desc:"Touched by divine grace"},
-  {min:1500,title:"Hunter of Laylatul Qadr", ar:"صَائِدُ لَيْلَةِ الْقَدْر", desc:"A night worth a thousand months"},
+  {min:0,   title:"Seeker",                  ar:"السَّالِك",                   desc:"The first step is intention"},
+  {min:100, title:"Devoted",                 ar:"الْمُخْلِص",                  desc:"The heart that remembers"},
+  {min:300, title:"Worshipper",              ar:"الْعَابِد",                    desc:"Rising while the world sleeps"},
+  {min:600, title:"Illuminated",             ar:"النُّورَانِيّ",                desc:"Nūrun ʿalā nūr"},
+  {min:1000,title:"Blessed",                 ar:"الْمُبَارَك",                  desc:"Touched by divine grace"},
+  {min:1500,title:"Mujahid",                 ar:"الْمُجَاهِد",                  desc:"Striving in the path of Allah"},
+  {min:2000,title:"Wali",                    ar:"الْوَلِيّ",                    desc:"A friend of Allah"},
+  {min:2500,title:"Muqarrab",                ar:"الْمُقَرَّب",                  desc:"Drawn close to the Divine"},
+  {min:3000,title:"The Beloved",             ar:"الْحَبِيب",                    desc:"Beloved by Allah Most High"},
+  {min:3500,title:"Hunter of Laylatul Qadr", ar:"صَائِدُ لَيْلَةِ الْقَدْر",   desc:"A night worth a thousand months"},
 ];
 const MOCK = [{name:"Ahmad S.",pts:1420},{name:"Fatima K.",pts:1185},{name:"Omar R.",pts:980},{name:"Aisha M.",pts:755},{name:"Yusuf H.",pts:610}];
 
