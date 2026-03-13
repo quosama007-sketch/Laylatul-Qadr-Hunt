@@ -166,20 +166,28 @@ function Arc({ pct, color, size=44 }){
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App(){
-  const [name,setName]   = useState(()=>localStorage.getItem("lq_name")||"");
-  const [inp,setInp]     = useState("");
-  const [started,setStart]=useState(()=>!!localStorage.getItem("lq_name"));
-  const [done,setDone]   = useState(()=>{
+  const savedName = localStorage.getItem("lq_name")||"";
+  const savedDob  = localStorage.getItem("lq_dob")||"";
+  const isRegistered = !!(savedName && savedDob);
+
+  const [name,setName]     = useState(savedName);
+  const [started,setStart] = useState(false);
+  const [done,setDone]     = useState(()=>{
     try{ return new Set(JSON.parse(localStorage.getItem("lq_done")||"[]")); }
     catch{ return new Set(); }
   });
   const [cat,setCat]     = useState("salah");
-  const [modal,setModal] = useState(null); // "lb" | "badge" | null
+  const [modal,setModal] = useState(null);
   const [copied,setCopied]=useState(false);
   const [flash,setFlash] = useState(null);
-  const [view,setView]   = useState("progress"); // "acts" | "progress"
+  const [view,setView]   = useState("progress");
 
-  const pts = useMemo(()=>{let s=0;for(const id of done){const t=TASKS.find(t=>t.id===id);if(t)s+=TIER[t.tier].pts;}return s;},[done]);
+  // Auth form state
+  const [authUser, setAuthUser] = useState("");
+  const [authDob,  setAuthDob]  = useState("");
+  const [authErr,  setAuthErr]  = useState("");
+
+  const pts      = useMemo(()=>{let s=0;for(const id of done){const t=TASKS.find(t=>t.id===id);if(t)s+=TIER[t.tier].pts;}return s;},[done]);
   const rank     = getRank(pts);
   const nextRank = RANKS[RANKS.indexOf(rank)+1];
   const pct      = Math.min(100,Math.round((pts/3660)*100));
@@ -199,12 +207,26 @@ export default function App(){
     });
   };
 
-  const begin = () => {
-    const n = inp.trim();
-    if(!n) return;
-    setName(n);
+  const handleRegister = () => {
+    const u = authUser.trim();
+    const d = authDob.trim();
+    if(!u || !d){ setAuthErr("Please fill in both fields."); return; }
+    localStorage.setItem("lq_name", u);
+    localStorage.setItem("lq_dob",  d);
+    setName(u);
     setStart(true);
-    localStorage.setItem("lq_name", n);
+  };
+
+  const handleLogin = () => {
+    const u = authUser.trim();
+    const d = authDob.trim();
+    if(!u || !d){ setAuthErr("Please fill in both fields."); return; }
+    if(u !== savedName || d !== savedDob){
+      setAuthErr("Incorrect username or date of birth.");
+      return;
+    }
+    setName(u);
+    setStart(true);
   };
 
   // ── LANDING ────────────────────────────────────────────────────────────────
@@ -219,7 +241,7 @@ export default function App(){
 
       <div style={{position:"relative",zIndex:1,width:"100%",maxWidth:420,textAlign:"center"}}>
 
-        {/* Top ornament line */}
+        {/* Top ornament */}
         <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:28}}>
           <div style={{flex:1,height:1,background:`linear-gradient(90deg,transparent,${C.borderGold})`}}/>
           <div style={{width:6,height:6,background:C.gold,transform:"rotate(45deg)",opacity:0.6}}/>
@@ -242,8 +264,7 @@ export default function App(){
 
         <p style={{
           fontSize:"0.86rem",color:C.textDim,lineHeight:1.9,
-          margin:"0 0 32px",fontFamily:"Georgia,serif",
-          letterSpacing:"0.02em",
+          margin:"0 0 28px",fontFamily:"Georgia,serif",letterSpacing:"0.02em",
         }}>
           Track six acts of worship across the last ten nights.<br/>
           Complete each level to unlock the next. Seek the night worth a thousand months.
@@ -251,7 +272,7 @@ export default function App(){
 
         {/* Stats row */}
         <div style={{
-          display:"flex",justifyContent:"center",gap:32,marginBottom:32,
+          display:"flex",justifyContent:"center",gap:32,marginBottom:28,
           fontSize:"0.62rem",letterSpacing:"0.18em",textTransform:"uppercase",
           color:"rgba(236,230,218,0.55)",fontFamily:"Georgia,serif",
         }}>
@@ -263,35 +284,89 @@ export default function App(){
           ))}
         </div>
 
-        {/* Input */}
-        <input
-          placeholder="Your name"
-          value={inp}
-          onChange={e=>setInp(e.target.value)}
-          onKeyDown={e=>e.key==="Enter"&&begin()}
-          style={{
-            display:"block",width:"100%",
-            background:"rgba(255,255,255,0.04)",
-            border:"1px solid rgba(196,155,60,0.5)",
-            borderRadius:6,
-            color:"rgba(236,230,218,0.95)",padding:"0.85rem 1.1rem",
-            fontSize:"0.95rem",outline:"none",
-            textAlign:"center",fontFamily:"Georgia,serif",
-            boxSizing:"border-box",marginBottom:12,
-            letterSpacing:"0.06em",
-            transition:"border-color 0.2s, background 0.2s",
-          }}
-          onFocus={e=>{e.target.style.borderColor="rgba(196,155,60,0.85)";e.target.style.background="rgba(255,255,255,0.07)";}}
-          onBlur={e=>{e.target.style.borderColor="rgba(196,155,60,0.5)";e.target.style.background="rgba(255,255,255,0.04)";}}
-        />
-        <button className="cta"
-          style={{opacity:inp.trim()?1:0.45,borderColor:"rgba(196,155,60,0.7)",color:C.gold,fontSize:"0.85rem",letterSpacing:"0.25em"}}
-          onClick={begin}>
-          Begin
-        </button>
+        {/* Auth card */}
+        <div style={{
+          background:"rgba(30,35,56,0.7)",
+          border:`1px solid rgba(212,175,80,0.3)`,
+          borderRadius:10,padding:"24px 22px",marginBottom:16,
+          backdropFilter:"blur(10px)",
+        }}>
+          <div style={{fontSize:"0.6rem",letterSpacing:"0.2em",textTransform:"uppercase",color:C.goldDim,fontFamily:"Georgia,serif",marginBottom:18}}>
+            {isRegistered ? "Welcome Back" : "Create Your Account"}
+          </div>
+
+          {/* Username */}
+          <input
+            placeholder="Username"
+            value={authUser}
+            onChange={e=>{setAuthUser(e.target.value);setAuthErr("");}}
+            onKeyDown={e=>e.key==="Enter"&&(isRegistered?handleLogin():handleRegister())}
+            style={{
+              display:"block",width:"100%",
+              background:"rgba(255,255,255,0.04)",
+              border:"1px solid rgba(212,175,80,0.4)",
+              borderRadius:6,color:C.text,
+              padding:"0.8rem 1rem",fontSize:"0.9rem",
+              outline:"none",fontFamily:"Georgia,serif",
+              boxSizing:"border-box",marginBottom:10,
+              letterSpacing:"0.04em",transition:"border-color 0.2s",
+            }}
+            onFocus={e=>e.target.style.borderColor="rgba(212,175,80,0.8)"}
+            onBlur={e=>e.target.style.borderColor="rgba(212,175,80,0.4)"}
+          />
+
+          {/* Date of birth */}
+          <input
+            type="date"
+            value={authDob}
+            onChange={e=>{setAuthDob(e.target.value);setAuthErr("");}}
+            onKeyDown={e=>e.key==="Enter"&&(isRegistered?handleLogin():handleRegister())}
+            style={{
+              display:"block",width:"100%",
+              background:"rgba(255,255,255,0.04)",
+              border:"1px solid rgba(212,175,80,0.4)",
+              borderRadius:6,color:authDob?C.text:C.textFaint,
+              padding:"0.8rem 1rem",fontSize:"0.9rem",
+              outline:"none",fontFamily:"Georgia,serif",
+              boxSizing:"border-box",marginBottom:4,
+              letterSpacing:"0.04em",transition:"border-color 0.2s",
+              colorScheme:"dark",
+            }}
+            onFocus={e=>e.target.style.borderColor="rgba(212,175,80,0.8)"}
+            onBlur={e=>e.target.style.borderColor="rgba(212,175,80,0.4)"}
+          />
+          <div style={{fontSize:"0.58rem",color:C.textFaint,fontFamily:"Georgia,serif",marginBottom:16,textAlign:"left",paddingLeft:2}}>
+            Date of birth is used as your password
+          </div>
+
+          {/* Error */}
+          {authErr && (
+            <div style={{
+              fontSize:"0.72rem",color:"#e07070",fontFamily:"Georgia,serif",
+              marginBottom:14,padding:"8px 12px",
+              background:"rgba(220,80,80,0.08)",
+              border:"1px solid rgba(220,80,80,0.2)",
+              borderRadius:5,textAlign:"left",
+            }}>
+              {authErr}
+            </div>
+          )}
+
+          {/* Button */}
+          <button className="cta"
+            style={{
+              opacity:(authUser.trim()&&authDob)?1:0.45,
+              borderColor:"rgba(212,175,80,0.7)",
+              color:C.gold,fontSize:"0.82rem",letterSpacing:"0.22em",
+              width:"100%",
+            }}
+            onClick={isRegistered?handleLogin:handleRegister}>
+            {isRegistered ? "Enter" : "Begin"}
+          </button>
+        </div>
 
         {/* Bottom ornament */}
-        <div style={{display:"flex",alignItems:"center",gap:12,marginTop:28}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginTop:8}}>
           <div style={{flex:1,height:1,background:`linear-gradient(90deg,transparent,${C.borderGold})`}}/>
           <div style={{width:6,height:6,background:C.gold,transform:"rotate(45deg)",opacity:0.6}}/>
           <div style={{flex:1,height:1,background:`linear-gradient(90deg,${C.borderGold},transparent)`}}/>
