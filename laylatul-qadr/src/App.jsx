@@ -166,10 +166,13 @@ function Arc({ pct, color, size=44 }){
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App(){
-  const [name,setName]   = useState("");
+  const [name,setName]   = useState(()=>localStorage.getItem("lq_name")||"");
   const [inp,setInp]     = useState("");
-  const [started,setStart]=useState(false);
-  const [done,setDone]   = useState(new Set());
+  const [started,setStart]=useState(()=>!!localStorage.getItem("lq_name"));
+  const [done,setDone]   = useState(()=>{
+    try{ return new Set(JSON.parse(localStorage.getItem("lq_done")||"[]")); }
+    catch{ return new Set(); }
+  });
   const [cat,setCat]     = useState("salah");
   const [modal,setModal] = useState(null); // "lb" | "badge" | null
   const [copied,setCopied]=useState(false);
@@ -191,8 +194,17 @@ export default function App(){
       const n=new Set(prev);
       if(n.has(id)) n.delete(id);
       else { n.add(id); setFlash(id); setTimeout(()=>setFlash(null),600); }
+      localStorage.setItem("lq_done", JSON.stringify([...n]));
       return n;
     });
+  };
+
+  const begin = () => {
+    const n = inp.trim();
+    if(!n) return;
+    setName(n);
+    setStart(true);
+    localStorage.setItem("lq_name", n);
   };
 
   // ── LANDING ────────────────────────────────────────────────────────────────
@@ -256,7 +268,7 @@ export default function App(){
           placeholder="Your name"
           value={inp}
           onChange={e=>setInp(e.target.value)}
-          onKeyDown={e=>e.key==="Enter"&&inp.trim()&&(setName(inp.trim()),setStart(true))}
+          onKeyDown={e=>e.key==="Enter"&&begin()}
           style={{
             display:"block",width:"100%",
             background:"rgba(255,255,255,0.04)",
@@ -274,7 +286,7 @@ export default function App(){
         />
         <button className="cta"
           style={{opacity:inp.trim()?1:0.45,borderColor:"rgba(196,155,60,0.7)",color:C.gold,fontSize:"0.85rem",letterSpacing:"0.25em"}}
-          onClick={()=>inp.trim()&&(setName(inp.trim()),setStart(true))}>
+          onClick={begin}>
           Begin
         </button>
 
