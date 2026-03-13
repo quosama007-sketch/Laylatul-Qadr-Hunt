@@ -317,7 +317,8 @@ export default function App(){
 
           {/* Date of birth */}
           <input
-            type="date"
+            type="text"
+            placeholder="Date of birth e.g. DDMMYYYY"
             value={authDob}
             onChange={e=>{setAuthDob(e.target.value);setAuthErr("");}}
             onKeyDown={e=>e.key==="Enter"&&(isRegistered?handleLogin():handleRegister())}
@@ -325,12 +326,11 @@ export default function App(){
               display:"block",width:"100%",
               background:"rgba(255,255,255,0.04)",
               border:"1px solid rgba(212,175,80,0.4)",
-              borderRadius:6,color:authDob?C.text:C.textFaint,
+              borderRadius:6,color:C.text,
               padding:"0.8rem 1rem",fontSize:"0.9rem",
               outline:"none",fontFamily:"Georgia,serif",
               boxSizing:"border-box",marginBottom:4,
               letterSpacing:"0.04em",transition:"border-color 0.2s",
-              colorScheme:"dark",
             }}
             onFocus={e=>e.target.style.borderColor="rgba(212,175,80,0.8)"}
             onBlur={e=>e.target.style.borderColor="rgba(212,175,80,0.4)"}
