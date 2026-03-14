@@ -167,8 +167,7 @@ function Arc({ pct, color, size=44 }){
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App(){
   const savedName = localStorage.getItem("lq_name")||"";
-  const savedDob  = localStorage.getItem("lq_dob")||"";
-  const isRegistered = !!(savedName && savedDob);
+  const isRegistered = !!savedName;
 
   const [name,setName]     = useState(savedName);
   const [started,setStart] = useState(false);
@@ -182,9 +181,7 @@ export default function App(){
   const [flash,setFlash] = useState(null);
   const [view,setView]   = useState("progress");
 
-  // Auth form state
   const [authUser, setAuthUser] = useState("");
-  const [authDob,  setAuthDob]  = useState("");
   const [authErr,  setAuthErr]  = useState("");
 
   const pts      = useMemo(()=>{let s=0;for(const id of done){const t=TASKS.find(t=>t.id===id);if(t)s+=TIER[t.tier].pts;}return s;},[done]);
@@ -209,22 +206,16 @@ export default function App(){
 
   const handleRegister = () => {
     const u = authUser.trim();
-    const d = authDob.trim();
-    if(!u || !d){ setAuthErr("Please fill in both fields."); return; }
+    if(!u){ setAuthErr("Please enter your name."); return; }
     localStorage.setItem("lq_name", u);
-    localStorage.setItem("lq_dob",  d);
     setName(u);
     setStart(true);
   };
 
   const handleLogin = () => {
     const u = authUser.trim();
-    const d = authDob.trim();
-    if(!u || !d){ setAuthErr("Please fill in both fields."); return; }
-    if(u !== savedName || d !== savedDob){
-      setAuthErr("Incorrect username or date of birth.");
-      return;
-    }
+    if(!u){ setAuthErr("Please enter your name."); return; }
+    if(u !== savedName){ setAuthErr("Name does not match saved profile."); return; }
     setName(u);
     setStart(true);
   };
@@ -297,7 +288,7 @@ export default function App(){
 
           {/* Username */}
           <input
-            placeholder="Username"
+            placeholder={isRegistered ? "Enter your name" : "Your name"}
             value={authUser}
             onChange={e=>{setAuthUser(e.target.value);setAuthErr("");}}
             onKeyDown={e=>e.key==="Enter"&&(isRegistered?handleLogin():handleRegister())}
@@ -308,36 +299,12 @@ export default function App(){
               borderRadius:6,color:C.text,
               padding:"0.8rem 1rem",fontSize:"0.9rem",
               outline:"none",fontFamily:"Georgia,serif",
-              boxSizing:"border-box",marginBottom:10,
+              boxSizing:"border-box",marginBottom:14,
               letterSpacing:"0.04em",transition:"border-color 0.2s",
             }}
             onFocus={e=>e.target.style.borderColor="rgba(212,175,80,0.8)"}
             onBlur={e=>e.target.style.borderColor="rgba(212,175,80,0.4)"}
           />
-
-          {/* Date of birth */}
-          <input
-            type="text"
-            placeholder="Date of birth e.g. DDMMYYYY"
-            value={authDob}
-            onChange={e=>{setAuthDob(e.target.value);setAuthErr("");}}
-            onKeyDown={e=>e.key==="Enter"&&(isRegistered?handleLogin():handleRegister())}
-            style={{
-              display:"block",width:"100%",
-              background:"rgba(255,255,255,0.04)",
-              border:"1px solid rgba(212,175,80,0.4)",
-              borderRadius:6,color:C.text,
-              padding:"0.8rem 1rem",fontSize:"0.9rem",
-              outline:"none",fontFamily:"Georgia,serif",
-              boxSizing:"border-box",marginBottom:4,
-              letterSpacing:"0.04em",transition:"border-color 0.2s",
-            }}
-            onFocus={e=>e.target.style.borderColor="rgba(212,175,80,0.8)"}
-            onBlur={e=>e.target.style.borderColor="rgba(212,175,80,0.4)"}
-          />
-          <div style={{fontSize:"0.58rem",color:C.textFaint,fontFamily:"Georgia,serif",marginBottom:16,textAlign:"left",paddingLeft:2}}>
-            Date of birth is used as your password
-          </div>
 
           {/* Error */}
           {authErr && (
@@ -355,7 +322,7 @@ export default function App(){
           {/* Button */}
           <button className="cta"
             style={{
-              opacity:(authUser.trim()&&authDob)?1:0.45,
+              opacity:authUser.trim()?1:0.45,
               borderColor:"rgba(212,175,80,0.7)",
               color:C.gold,fontSize:"0.82rem",letterSpacing:"0.22em",
               width:"100%",
